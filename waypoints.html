@@ -10,14 +10,17 @@
   <section class="section estate-map-section"><div class="container">
     <div class="section-head"><p class="eyebrow">Explore the estate</p><h2>Choose a stop on the quest map.</h2><p>Begin at the Pop-up Booths, then follow the sparkling route to uncover each activity around Moonstone Estate. Select a marker to see what awaits.</p></div>
     <div class="map-shell map-shell--satellite reveal">
-      <div class="map map--satellite" role="region" aria-label="Interactive satellite map of Moonstone Estate waypoints" aria-describedby="map-instructions">
-        <img class="map-image" src="assets/images/moonstone-waypoint-map.png" alt="Satellite view of the Moonstone Estate route, with yellow waypoint dots." width="906" height="768">
-        <p id="map-instructions" class="sr-only">Select a yellow waypoint dot to learn about its quest activity.</p>
-        <button class="node node--waypoint node-two" type="button" aria-pressed="false" aria-label="Booth 2: Estate Builder" data-title="Booth 2 · Estate Builder" data-story="Rebuild the Gemstone Streets map and earn the Estate Cartographer badge."><span>2</span></button>
-        <button class="node node--waypoint node-three" type="button" aria-pressed="false" aria-label="Booth 3: Street Name Puzzle" data-title="Booth 3 · Street Name Puzzle" data-story="Match gemstone street names with their heritage clues."><span>3</span></button>
-        <button class="node node--waypoint node-four" type="button" aria-pressed="false" aria-label="Booth 4: Memory Post" data-title="Booth 4 · Memory Post" data-story="Leave a Moonstone memory for the neighbourhood story wall."><span>4</span></button>
-        <button class="node node--waypoint node-five" type="button" aria-pressed="false" aria-label="Booth 5: Moonstone Marketplace" data-title="Booth 5 · Moonstone Marketplace" data-story="Match everyday essentials with the traditional businesses that served the community."><span>5</span></button>
-        <button class="node node--waypoint node-six" type="button" aria-pressed="false" aria-label="Booth 6: Then and Now" data-title="Booth 6 · Then &amp; Now" data-story="Compare historic and present-day scenes to uncover how the estate has changed."><span>6</span></button>
+      <div class="map map--satellite" role="region" aria-label="Interactive illustrated map of Moonstone Estate waypoints" aria-describedby="map-instructions">
+        <p id="map-instructions" class="sr-only">The complete Moonstone Estate map is shown below. Use the plus and minus controls, mouse wheel, or a pinch gesture to zoom. Drag the map after zooming, and select a yellow waypoint dot to learn about its quest activity.</p>
+        <div class="map-layer">
+          <img class="map-image" src="assets/images/moonstone-waypoint-map.png" alt="Illustrated aerial map of the Moonstone Estate route." width="1536" height="1024" draggable="false">
+          <button class="node node--waypoint node-one" type="button" aria-pressed="false" aria-label="Booth 1: Quest registration" data-title="Booth 1 · Quest registration" data-story="Collect your Gemstone Passport, scan in and begin your Moonstone Estate adventure."><span>1</span></button>
+          <button class="node node--waypoint node-two" type="button" aria-pressed="false" aria-label="Booth 2: Estate Builder" data-title="Booth 2 · Estate Builder" data-story="Rebuild the Gemstone Streets map and earn the Estate Cartographer badge."><span>2</span></button>
+          <button class="node node--waypoint node-three" type="button" aria-pressed="false" aria-label="Booth 3: Street Name Puzzle" data-title="Booth 3 · Street Name Puzzle" data-story="Match gemstone street names with their heritage clues."><span>3</span></button>
+          <button class="node node--waypoint node-four" type="button" aria-pressed="false" aria-label="Booth 4: Memory Post" data-title="Booth 4 · Memory Post" data-story="Leave a Moonstone memory for the neighbourhood story wall."><span>4</span></button>
+          <button class="node node--waypoint node-five" type="button" aria-pressed="false" aria-label="Booth 5: Moonstone Marketplace" data-title="Booth 5 · Moonstone Marketplace" data-story="Match everyday essentials with the traditional businesses that served the community."><span>5</span></button>
+        </div>
+        <div class="map-controls" aria-label="Map controls"><button type="button" class="map-control" data-map-zoom="in" aria-label="Zoom in">+</button><button type="button" class="map-control" data-map-zoom="out" aria-label="Zoom out">−</button><button type="button" class="map-control map-reset" data-map-zoom="reset">Reset</button></div>
       </div>
       <div class="map-info" aria-live="polite"><strong>Select a yellow dot</strong><span>Each yellow dot marks a quest waypoint on the Moonstone Estate route.</span></div>
     </div>
