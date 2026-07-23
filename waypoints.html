@@ -9,24 +9,22 @@
   <section class="section"><div class="container"><div class="route-intro reveal"><span>START</span><div><h2>Booth 1 · Quest registration</h2><p>Scan the QR code, collect a physical Gemstone Passport and a map of Moonstone Lane, then receive your welcome to the story.</p></div><p class="route-reward"><strong>First rewards</strong>Free gemstone sticker<br>First digital badge</p></div></div></div></section>
   <section class="section estate-map-section"><div class="container">
     <div class="section-head"><p class="eyebrow">Explore the estate</p><h2>Choose a stop on the quest map.</h2><p>Begin at the Pop-up Booths, then follow the sparkling route to uncover each activity around Moonstone Estate. Select a marker to see what awaits.</p></div>
-    <div class="map-shell reveal">
-      <div class="map" role="region" aria-label="Interactive cartoon map of Moonstone Estate waypoints">
-        <div class="map-skyline" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-        <div class="map-river" aria-hidden="true"><span>Kallang River</span></div><div class="map-pie" aria-hidden="true"><span>PIE</span></div>
-        <div class="map-road moonstone-road" aria-hidden="true"><span>Moonstone Lane</span></div><div class="map-road opal-road" aria-hidden="true"><span>Opal Crescent</span></div><div class="map-road topaz-road" aria-hidden="true"><span>Topaz Road</span></div>
-        <div class="estate-block block-one" aria-hidden="true"></div><div class="estate-block block-two" aria-hidden="true"></div><div class="estate-block block-three" aria-hidden="true"></div><div class="estate-block block-four" aria-hidden="true"></div><div class="estate-tree tree-one" aria-hidden="true"></div><div class="estate-tree tree-two" aria-hidden="true"></div><div class="estate-tree tree-three" aria-hidden="true"></div>
-        <svg class="map-route" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true"><path d="M558 150 C700 172 810 180 756 268 S525 300 500 410 S730 477 820 400" /></svg>
-        <button class="node start-node" type="button" style="left:54%;top:20%" aria-pressed="true" data-title="Start here · Pop-up Booths" data-story="Collect your Gemstone Passport, scan in and begin your Moonstone Estate adventure."><span>✦</span><b>Start</b></button>
-        <button class="node" type="button" style="left:74%;top:31%" aria-pressed="false" data-title="Booth 2 · Estate Builder" data-story="Rebuild the Gemstone Streets map and earn the Estate Cartographer badge."><span>2</span><b>Map puzzle</b></button>
-        <button class="node" type="button" style="left:68%;top:49%" aria-pressed="false" data-title="Booth 3 · Street Name Puzzle" data-story="Match gemstone street names with their heritage clues."><span>3</span><b>Street match</b></button>
-        <button class="node" type="button" style="left:48%;top:61%" aria-pressed="false" data-title="Booth 4 · Memory Post" data-story="Leave a Moonstone memory for the neighbourhood story wall."><span>4</span><b>Memory post</b></button>
-        <button class="node" type="button" style="left:31%;top:48%" aria-pressed="false" data-title="Booth 5 · Moonstone Marketplace" data-story="Match everyday essentials with the traditional businesses that served the community."><span>5</span><b>Marketplace</b></button>
-        <button class="node" type="button" style="left:70%;top:70%" aria-pressed="false" data-title="Booth 6 · Then &amp; Now" data-story="Compare historic and present-day scenes to uncover how the estate has changed."><span>6</span><b>Then &amp; now</b></button>
-        <p class="map-label estate-label">Moonstone<br>Estate</p><p class="map-label popup-label">Pop-up<br>Booths</p>
+    <div class="map-shell map-shell--satellite reveal">
+      <div class="map map--satellite" role="region" aria-label="Interactive illustrated map of Moonstone Estate waypoints" aria-describedby="map-instructions">
+        <p id="map-instructions" class="sr-only">The complete Moonstone Estate map is shown below. Use the plus and minus controls, mouse wheel, or a pinch gesture to zoom. Drag the map after zooming, and select a yellow waypoint dot to learn about its quest activity.</p>
+        <div class="map-layer">
+          <img class="map-image" src="assets/images/moonstone-waypoint-map.png" alt="Illustrated aerial map of the Moonstone Estate route." width="1536" height="1024" draggable="false">
+          <button class="node node--waypoint node-one" type="button" aria-pressed="false" aria-label="Booth 1: Quest registration" data-title="Booth 1 · Quest registration" data-story="Collect your Gemstone Passport, scan in and begin your Moonstone Estate adventure."><span>1</span></button>
+          <button class="node node--waypoint node-two" type="button" aria-pressed="false" aria-label="Booth 2: Estate Builder" data-title="Booth 2 · Estate Builder" data-story="Rebuild the Gemstone Streets map and earn the Estate Cartographer badge."><span>2</span></button>
+          <button class="node node--waypoint node-three" type="button" aria-pressed="false" aria-label="Booth 3: Street Name Puzzle" data-title="Booth 3 · Street Name Puzzle" data-story="Match gemstone street names with their heritage clues."><span>3</span></button>
+          <button class="node node--waypoint node-four" type="button" aria-pressed="false" aria-label="Booth 4: Memory Post" data-title="Booth 4 · Memory Post" data-story="Leave a Moonstone memory for the neighbourhood story wall."><span>4</span></button>
+          <button class="node node--waypoint node-five" type="button" aria-pressed="false" aria-label="Booth 5: Moonstone Marketplace" data-title="Booth 5 · Moonstone Marketplace" data-story="Match everyday essentials with the traditional businesses that served the community."><span>5</span></button>
+        </div>
+        <div class="map-controls" aria-label="Map controls"><button type="button" class="map-control" data-map-zoom="in" aria-label="Zoom in">+</button><button type="button" class="map-control" data-map-zoom="out" aria-label="Zoom out">−</button><button type="button" class="map-control map-reset" data-map-zoom="reset">Reset</button></div>
       </div>
-      <div class="map-info" aria-live="polite"><strong>Start here · Pop-up Booths</strong><span>Collect your Gemstone Passport, scan in and begin your Moonstone Estate adventure.</span></div>
+      <div class="map-info" aria-live="polite"><strong>Select a yellow dot</strong><span>Each yellow dot marks a quest waypoint on the Moonstone Estate route.</span></div>
     </div>
-    <p class="map-note">Illustrated for the quest—waypoint positions are a playful guide around Moonstone Estate, not a navigation map.</p>
+    <p class="map-note">Yellow dots mark the quest waypoints on this Moonstone Estate route map; select one to preview its activity.</p>
   </div></section>
   <section class="section alt"><div class="container"><div class="section-head"><p class="eyebrow">Storyline 1</p><h2>Welcome, Heritage Explorer.</h2><p>Years ago, Moonstone Estate was one of Singapore's vibrant neighbourhoods, filled with bustling streets, family-run businesses and close-knit communities. Your mission is to recover six lost pieces of its history and restore its forgotten legacy.</p></div>
     <ol class="waypoint-timeline reveal">
