@@ -37,12 +37,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const locationMapElement = document.querySelector('#location-map');
   if (locationMapElement && window.L) {
     const estateLocation = [1.3286, 103.8683];
-    const locationMap = L.map(locationMapElement, { scrollWheelZoom: true }).setView(estateLocation, 15);
+    const initialView = { center: estateLocation, zoom: 15 };
+    const locationMap = L.map(locationMapElement, { scrollWheelZoom: true, zoomControl: true, tap: true }).setView(initialView.center, initialView.zoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(locationMap);
     const estateIcon = L.divIcon({ className: 'estate-location-pin', html: '<span>⌖</span>', iconSize: [42, 42], iconAnchor: [21, 42], popupAnchor: [0, -38] });
     L.marker(estateLocation, { icon: estateIcon }).addTo(locationMap).bindPopup('<strong>Moonstone Estate</strong><br>Moonstone Quest arrival area near Moonstone Lane and Topaz Road.').openPopup();
     L.circleMarker([1.3306, 103.8664], { radius: 7, color: '#258bd0', fillColor: '#258bd0', fillOpacity: 1 }).addTo(locationMap).bindTooltip('Visitor Entrance · Topaz Road', { permanent: true, direction: 'top' });
     L.circleMarker([1.3298, 103.8695], { radius: 7, color: '#d4af37', fillColor: '#d4af37', fillOpacity: 1 }).addTo(locationMap).bindTooltip('Pop-up Booth Area', { permanent: true, direction: 'bottom' });
+    const resetLocationMap = () => { locationMap.setView(initialView.center, initialView.zoom); locationMap.invalidateSize(); };
+    document.querySelector('#location-map-reset')?.addEventListener('click', resetLocationMap);
+    requestAnimationFrame(() => setTimeout(() => locationMap.invalidateSize(), 0));
     window.addEventListener('resize', () => locationMap.invalidateSize());
   }
   const rows = [...document.querySelectorAll('.theme-row')]; document.querySelectorAll('.season-tab').forEach(tab => tab.addEventListener('click', () => { document.querySelectorAll('.season-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); rows.forEach(row => row.classList.toggle('active', tab.dataset.season === 'all' || row.dataset.season === tab.dataset.season)); }));
