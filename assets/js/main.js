@@ -34,20 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
     map.querySelectorAll('[data-map-zoom]').forEach(control => control.addEventListener('click', () => { const action = control.dataset.mapZoom; if (action === 'reset') resetMap(); else setZoom(zoom + (action === 'in' ? .5 : -.5)); }));
     window.addEventListener('resize', renderMap); renderMap();
   }
-  const locationMapElement = document.querySelector('#location-map');
-  if (locationMapElement && window.L) {
-    const estateLocation = [1.3286, 103.8683];
-    const initialView = { center: estateLocation, zoom: 15 };
-    const locationMap = L.map(locationMapElement, { scrollWheelZoom: true, zoomControl: true, tap: true }).setView(initialView.center, initialView.zoom);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(locationMap);
+  const makeLocationMap = (elementId, resetId, zoom, focused = false) => {
+    const element = document.querySelector(elementId); if (!element || !window.L || element.dataset.leafletReady) return;
+    element.dataset.leafletReady = 'true'; const estateLocation = [1.3286, 103.8683]; const entrance = [1.3306, 103.8664]; const booths = [1.3298, 103.8695];
+    const map = L.map(element, { scrollWheelZoom: true, zoomControl: true, tap: true }).setView(estateLocation, zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
     const estateIcon = L.divIcon({ className: 'estate-location-pin', html: '<span>⌖</span>', iconSize: [42, 42], iconAnchor: [21, 42], popupAnchor: [0, -38] });
-    L.marker(estateLocation, { icon: estateIcon }).addTo(locationMap).bindPopup('<strong>Moonstone Estate</strong><br>Moonstone Quest arrival area near Moonstone Lane and Topaz Road.').openPopup();
-    L.circleMarker([1.3306, 103.8664], { radius: 7, color: '#258bd0', fillColor: '#258bd0', fillOpacity: 1 }).addTo(locationMap).bindTooltip('Visitor Entrance · Topaz Road', { permanent: true, direction: 'top' });
-    L.circleMarker([1.3298, 103.8695], { radius: 7, color: '#d4af37', fillColor: '#d4af37', fillOpacity: 1 }).addTo(locationMap).bindTooltip('Pop-up Booth Area', { permanent: true, direction: 'bottom' });
-    const resetLocationMap = () => { locationMap.setView(initialView.center, initialView.zoom); locationMap.invalidateSize(); };
-    document.querySelector('#location-map-reset')?.addEventListener('click', resetLocationMap);
-    requestAnimationFrame(() => setTimeout(() => locationMap.invalidateSize(), 0));
-    window.addEventListener('resize', () => locationMap.invalidateSize());
-  }
+    L.marker(estateLocation, { icon: estateIcon }).addTo(map).bindPopup('<strong>Moonstone Estate</strong><br>Moonstone Quest arrival area.');
+    L.circleMarker(entrance, { radius: 8, color: '#fff', weight: 2, fillColor: '#258bd0', fillOpacity: 1 }).addTo(map).bindTooltip('Visitor Entrance · Topaz Road', { permanent: focused, direction: 'top' });
+    if (focused) { L.circleMarker(booths, { radius: 8, color: '#fff', weight: 2, fillColor: '#d4af37', fillOpacity: 1 }).addTo(map).bindTooltip('Proposed Pop-up Booth Area', { permanent: true, direction: 'bottom' }); L.polygon([[1.3311,103.8670],[1.3306,103.8702],[1.3285,103.8706],[1.3281,103.8680]], { color:'#8fb37b', weight:2, fillColor:'#8fb37b', fillOpacity:.18 }).addTo(map); L.polyline([entrance, booths], { color:'#d4af37', weight:4, dashArray:'8 8' }).addTo(map); }
+    const reset = () => { map.setView(estateLocation, zoom); map.invalidateSize(); }; document.querySelector(resetId)?.addEventListener('click', reset);
+    requestAnimationFrame(() => window.setTimeout(() => map.invalidateSize(), 150)); window.addEventListener('load', () => map.invalidateSize()); window.addEventListener('resize', () => map.invalidateSize());
+  };
+  makeLocationMap('#location-map', '#location-map-reset', 15); makeLocationMap('#estate-guide-map', '#estate-guide-map-reset', 17, true);
   const rows = [...document.querySelectorAll('.theme-row')]; document.querySelectorAll('.season-tab').forEach(tab => tab.addEventListener('click', () => { document.querySelectorAll('.season-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); rows.forEach(row => row.classList.toggle('active', tab.dataset.season === 'all' || row.dataset.season === tab.dataset.season)); }));
 });
