@@ -46,6 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const reset = () => { map.setView(estateLocation, zoom); map.invalidateSize(); }; document.querySelector(resetId)?.addEventListener('click', reset);
     requestAnimationFrame(() => window.setTimeout(() => map.invalidateSize(), 150)); window.addEventListener('load', () => map.invalidateSize()); window.addEventListener('resize', () => map.invalidateSize());
   };
-  makeLocationMap('#location-map', '#location-map-reset', 15); makeLocationMap('#estate-guide-map', '#estate-guide-map-reset', 17, true);
+  makeLocationMap('#location-map', '#location-map-reset', 15);
   const rows = [...document.querySelectorAll('.theme-row')]; document.querySelectorAll('.season-tab').forEach(tab => tab.addEventListener('click', () => { document.querySelectorAll('.season-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); rows.forEach(row => row.classList.toggle('active', tab.dataset.season === 'all' || row.dataset.season === tab.dataset.season)); }));
 });
