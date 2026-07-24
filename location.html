@@ -10,9 +10,26 @@
 <style>
   /* --- Interactive map enhancements (safe to move into styles.css later) --- */
   .location-map-frame { position: relative; }
-  .location-map { min-height: 420px; width: 100%; border-radius: 12px; z-index: 0; }
+  .location-map { min-height: 420px; width: 100%; border-radius: 12px; z-index: 0; overflow: hidden; }
   .location-map .leaflet-popup-content-wrapper { border-radius: 10px; }
   .location-map .leaflet-popup-content { margin: 10px 12px; font-size: 0.9rem; line-height: 1.35; }
+
+  /* --- Fix: site-wide "img { max-width:100%; height:auto }" resets break Leaflet's
+     tile grid, which relies on fixed 256x256px tile images. Force real sizing back. --- */
+  .location-map.leaflet-container img,
+  .location-map .leaflet-tile-pane img,
+  .location-map .leaflet-tile-container img {
+    max-width: none !important;
+    max-height: none !important;
+  }
+  .location-map .leaflet-tile {
+    width: 256px !important;
+    height: 256px !important;
+  }
+  .location-map .leaflet-marker-icon,
+  .location-map .leaflet-marker-shadow {
+    max-width: none !important;
+  }
 
   .location-reset {
     margin-top: 0.6rem;
@@ -248,6 +265,11 @@
         map.setView(MOONSTONE_ESTATE, DEFAULT_ZOOM);
       });
     }
+
+    // Guard against the container being measured before layout/fonts settle,
+    // which can otherwise leave tiles misaligned.
+    setTimeout(function () { map.invalidateSize(); }, 200);
+    window.addEventListener('resize', function () { map.invalidateSize(); });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
