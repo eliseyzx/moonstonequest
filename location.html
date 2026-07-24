@@ -6,36 +6,15 @@
 <meta name="description" content="Travel information and visitor entrance details for Moonstone Estate.">
 <title>Location | Moonstone Quest</title>
 <link rel="stylesheet" href="assets/css/styles.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQWlPZQyZB7AHM+4jQ4K4JfCJJ/60Y=" crossorigin="">
 <style>
-  /* --- Interactive map enhancements (safe to move into styles.css later) --- */
-  .location-map-frame { position: relative; display: block !important; }
-  .location-map {
-    min-height: 420px;
-    height: 460px !important;
-    width: 100% !important;
+  /* --- Interactive map (Google Maps embed iframe) --- */
+  .location-map-frame { position: relative; }
+  .location-map-frame iframe {
+    display: block;
+    width: 100%;
+    height: 460px;
+    border: 0;
     border-radius: 12px;
-    z-index: 0;
-    overflow: hidden;
-  }
-  .location-map .leaflet-popup-content-wrapper { border-radius: 10px; }
-  .location-map .leaflet-popup-content { margin: 10px 12px; font-size: 0.9rem; line-height: 1.35; }
-
-  /* --- Fix: site-wide "img { max-width:100%; height:auto }" resets break Leaflet's
-     tile grid, which relies on fixed 256x256px tile images. Force real sizing back. --- */
-  .location-map.leaflet-container img,
-  .location-map .leaflet-tile-pane img,
-  .location-map .leaflet-tile-container img {
-    max-width: none !important;
-    max-height: none !important;
-  }
-  .location-map .leaflet-tile {
-    width: 256px !important;
-    height: 256px !important;
-  }
-  .location-map .leaflet-marker-icon,
-  .location-map .leaflet-marker-shadow {
-    max-width: none !important;
   }
 
   .location-reset {
@@ -48,20 +27,6 @@
     font-size: 0.85rem;
   }
   .location-reset:hover { background: #f4ead1; }
-
-  .moonstone-pin { display: flex; align-items: center; justify-content: center; }
-  .moonstone-pin-dot {
-    display: block;
-    width: 22px;
-    height: 22px;
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    border: 3px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-  }
-  .moonstone-pin--estate .moonstone-pin-dot   { background: #7c5cff; }
-  .moonstone-pin--entrance .moonstone-pin-dot { background: #d4af37; }
-  .moonstone-pin--booth .moonstone-pin-dot    { background: #2e8b57; }
 
   .map-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
   .map-legend .legend-estate   { background: #7c5cff; }
@@ -144,12 +109,18 @@
         <p>Moonstone Lane sits between the Kallang River and the PIE, near Topaz Road. Pan, zoom and tap the pins below to explore the estate's exact location and surroundings.</p>
       </div>
       <div class="location-map-frame">
-        <div id="location-map" class="location-map" style="height:460px;width:100%;position:relative;overflow:hidden;border-radius:12px;" aria-label="Interactive map of Moonstone Estate on Moonstone Lane, Singapore"></div>
+        <iframe
+          id="location-map"
+          title="Interactive map of Moonstone Estate on Moonstone Lane, Singapore"
+          src="https://maps.google.com/maps?q=Moonstone+Estate,+Moonstone+Lane,+Singapore+328465&ll=1.3279,103.8649&z=17&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
         <button type="button" class="location-reset" id="location-map-reset">Reset Map</button>
       </div>
       <div class="map-legend">
-        <span><i class="legend-estate"></i>Moonstone Estate</span>
-        <span><i class="legend-entrance"></i>Visitor Entrance · Topaz Road</span>
+        <span><i class="legend-estate"></i>Moonstone Estate (pinned)</span>
+        <span><i class="legend-entrance"></i>Visitor Entrance · Topaz Road, ~300m walk</span>
       </div>
       <p class="map-note"><a href="https://www.google.com/maps/dir/?api=1&amp;destination=1.3279,103.8649" target="_blank" rel="noopener">Open in Google Maps ↗</a></p>
     </div>
@@ -211,83 +182,17 @@
   </div>
 </footer>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="assets/js/main.js"></script>
 <script>
 (function () {
-  if (typeof L === 'undefined') return;
+  var mapFrame = document.getElementById('location-map');
+  var resetBtn = document.getElementById('location-map-reset');
+  if (!mapFrame || !resetBtn) return;
 
-  // Moonstone Lane, Singapore — real-world coordinates (postal sector 3284xx, Bendemeer / District 12)
-  var MOONSTONE_ESTATE = [1.3279, 103.8649];
-
-  // Topaz Road visitor entrance — approximate, just off Moonstone Lane near the PIE footbridge.
-  // Nudge these two numbers if you have the exact entrance coordinates.
-  var VISITOR_ENTRANCE = [1.3286, 103.8657];
-
-  var DEFAULT_ZOOM = 17;
-
-  function gemIcon(modifierClass) {
-    return L.divIcon({
-      className: 'moonstone-pin ' + modifierClass,
-      html: '<span class="moonstone-pin-dot"></span>',
-      iconSize: [26, 26],
-      iconAnchor: [13, 24],
-      popupAnchor: [0, -22]
-    });
-  }
-
-  function initMap(elId, resetBtnId) {
-    var el = document.getElementById(elId);
-    if (!el || el._leaflet_id) return; // guard against double-init
-
-    var map = L.map(elId, {
-      center: MOONSTONE_ESTATE,
-      zoom: DEFAULT_ZOOM,
-      scrollWheelZoom: false
-    });
-
-    // Custom-styled basemap (CARTO Voyager) instead of default OSM tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      maxZoom: 19
-    }).addTo(map);
-
-    L.marker(MOONSTONE_ESTATE, { icon: gemIcon('moonstone-pin--estate') })
-      .addTo(map)
-      .bindPopup('<strong>Moonstone Estate</strong><br>Moonstone Lane, Singapore')
-      .openPopup();
-
-    L.marker(VISITOR_ENTRANCE, { icon: gemIcon('moonstone-pin--entrance') })
-      .addTo(map)
-      .bindPopup('<strong>Visitor Entrance</strong><br>Topaz Road (near the PIE footbridge)');
-
-    // Only zoom with scroll once the visitor has clicked into the map
-    map.on('click', function () { map.scrollWheelZoom.enable(); });
-    el.addEventListener('mouseleave', function () { map.scrollWheelZoom.disable(); });
-
-    var resetBtn = document.getElementById(resetBtnId);
-    if (resetBtn) {
-      resetBtn.addEventListener('click', function () {
-        map.closePopup();
-        map.setView(MOONSTONE_ESTATE, DEFAULT_ZOOM);
-      });
-    }
-
-    // Guard against the container being measured before layout/fonts settle,
-    // which can otherwise leave tiles misaligned or map appearing tiny/offset.
-    function fixSize() { map.invalidateSize(); }
-    setTimeout(fixSize, 100);
-    setTimeout(fixSize, 500);
-    setTimeout(fixSize, 1500);
-    window.addEventListener('load', fixSize);
-    window.addEventListener('resize', fixSize);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(fixSize);
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    initMap('location-map', 'location-map-reset');
+  var defaultSrc = mapFrame.getAttribute('src');
+  resetBtn.addEventListener('click', function () {
+    // Reloading the src is the only way to reset pan/zoom state inside the embed.
+    mapFrame.setAttribute('src', defaultSrc);
   });
 })();
 </script>
